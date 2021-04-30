@@ -8,10 +8,10 @@ import (
 
 func Start() {
 
-	mux := mux.NewRouter()
+	router := mux.NewRouter()
 
-	mux.HandleFunc("/greet", greet)
-	mux.HandleFunc("/customers", getAllCustomers)
+	router.HandleFunc("/greet", greet)
+	router.HandleFunc("/customers", getAllCustomers)
 
-	log.Fatal(http.ListenAndServe(":8000", mux))
+	log.Fatal(http.ListenAndServe(":8000", router))
 }
