@@ -1,13 +1,14 @@
 package app
 
 import (
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 )
 
 func Start() {
 
-	mux := http.NewServeMux()
+	mux := mux.NewRouter()
 
 	mux.HandleFunc("/greet", greet)
 	mux.HandleFunc("/customers", getAllCustomers)
