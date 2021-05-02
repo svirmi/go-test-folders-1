@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"folders-one/service"
 	"net/http"
 )
 
@@ -13,11 +14,17 @@ type Customer struct {
 	Zipcode string `json:"zip_code" xml:"zip_code"`
 }
 
-func getAllCustomers(w http.ResponseWriter, r *http.Request) {
-	customers := []Customer{
-		{"Bob", "New Yourk", "192256"},
-		{"Alice", "Denver", "725609"},
-	}
+type CustomerHandlers struct {
+	service service.CustomerService
+}
+
+func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Request) {
+	// customers := []Customer{
+	// 	{"Bob", "New Yourk", "192256"},
+	// 	{"Alice", "Denver", "725609"},
+	// }
+
+	customers, _ := ch.service.GetAllCustomers()
 
 	if r.Header.Get("Content-Type") == "application/xml" {
 		w.Header().Add("Content-Type", "application/xml")
