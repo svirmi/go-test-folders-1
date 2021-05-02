@@ -13,7 +13,7 @@ func Start() {
 
 	router := mux.NewRouter()
 
-	// wire service and dependencies
+	// wire app with services and dependencies
 	ch := CustomerHandlers{service.NewCustomerService(domain.NewCustomerRepositoryStub())}
 
 	router.HandleFunc("/customers", ch.getAllCustomers).Methods(http.MethodGet)
