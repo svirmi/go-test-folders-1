@@ -15,7 +15,7 @@ func Start() {
 
 	// wire app with services and dependencies
 	// ch := CustomerHandlers{service.NewCustomerService(domain.NewCustomerRepositoryStub())}
-	ch := CustomerHandlers{service.NewCustomerService(domain.NewCustomerRepositoryDb())}
+	ch := CustomerHandlers{service.NewCustomerService(domain.NewCustomerRepositoryDb())} // DB adapter injected
 
 	router.HandleFunc("/customers", ch.getAllCustomers).Methods(http.MethodGet)
 
