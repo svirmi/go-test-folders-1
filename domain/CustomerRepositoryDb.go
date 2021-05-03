@@ -8,22 +8,15 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type NewCustomerRepositoryDb struct {
+type CustomerRepositoryDb struct {
+	client *sql.DB
 }
 
-func (d NewCustomerRepositoryDb) FindAll() ([]Customer, error) {
-	client, err := sql.Open("mysql", "user:password@/dbname")
-	if err != nil {
-		panic(err)
-	}
-	// See "Important settings" section.
-	client.SetConnMaxLifetime(time.Minute * 3)
-	client.SetMaxOpenConns(10)
-	client.SetMaxIdleConns(10)
+func (d CustomerRepositoryDb) FindAll() ([]Customer, error) {
 
 	findAllSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers"
 
-	rows, err := client.Query(findAllSql)
+	rows, err := d.client.Query(findAllSql)
 
 	if err != nil {
 		log.Println("Error while querying customer table " + err.Error())
@@ -45,5 +38,16 @@ func (d NewCustomerRepositoryDb) FindAll() ([]Customer, error) {
 	}
 
 	return customers, nil
+}
 
+func NewCustomerRepositoryDb() CustomerRepositoryDb {
+	client, err := sql.Open("mysql", "root:secret@tcp(localhost:3306)/banking")
+	if err != nil {
+		panic(err)
+	}
+	// See "Important settings" section.
+	client.SetConnMaxLifetime(time.Minute * 3)
+	client.SetMaxOpenConns(10)
+	client.SetMaxIdleConns(10)
+	return CustomerRepositoryDb{client}
 }
