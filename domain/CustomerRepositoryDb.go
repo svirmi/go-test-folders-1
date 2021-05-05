@@ -2,7 +2,7 @@ package domain
 
 import (
 	"database/sql"
-	"errors"
+	"folders-one/errs"
 	"log"
 	"time"
 
@@ -53,7 +53,7 @@ func NewCustomerRepositoryDb() CustomerRepositoryDb {
 	return CustomerRepositoryDb{client}
 }
 
-func (d CustomerRepositoryDb) ById(id string) (*Customer, error) {
+func (d CustomerRepositoryDb) ById(id string) (*Customer, *errs.AppError) {
 	customerSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers where customer_id = ?"
 
 	row := d.client.QueryRow(customerSql, id)
@@ -65,10 +65,10 @@ func (d CustomerRepositoryDb) ById(id string) (*Customer, error) {
 	if err != nil {
 
 		if err == sql.ErrNoRows {
-			return nil, errors.New("Customer not found")
+			return nil, errs.NewNotFoundError("Customer not found")
 		} else {
 			log.Println("Error while scanning customer: " + err.Error())
-			return nil, errors.New("DB error")
+			return nil, errs.NewNotFoundError("Unexpected DB error")
 		}
 	}
 

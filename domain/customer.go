@@ -1,5 +1,7 @@
 package domain
 
+import "folders-one/errs"
+
 type Customer struct {
 	Id          string
 	Name        string
@@ -12,5 +14,5 @@ type Customer struct {
 // acts as a port: any component implementing this interface is becoming adapter
 type CustomerRepository interface {
 	FindAll() ([]Customer, error)
-	ById(string) (*Customer, error)
+	ById(string) (*Customer, *errs.AppError)
 }

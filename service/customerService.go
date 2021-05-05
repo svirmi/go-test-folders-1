@@ -1,10 +1,13 @@
 package service
 
-import "folders-one/domain"
+import (
+	"folders-one/domain"
+	"folders-one/errs"
+)
 
 type CustomerService interface {
 	GetAllCustomers() ([]domain.Customer, error)
-	GetCustomer(string) (*domain.Customer, error)
+	GetCustomer(string) (*domain.Customer, *errs.AppError)
 }
 
 type DefaultCustomerService struct {
@@ -19,6 +22,6 @@ func NewCustomerService(repository domain.CustomerRepository) DefaultCustomerSer
 	return DefaultCustomerService{repository}
 }
 
-func (s DefaultCustomerService) GetCustomer(id string) (*domain.Customer, error) {
+func (s DefaultCustomerService) GetCustomer(id string) (*domain.Customer, *errs.AppError) {
 	return s.repo.ById(id)
 }
