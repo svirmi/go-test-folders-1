@@ -43,7 +43,7 @@ func (ch *CustomerHandlers) getCustomer(w http.ResponseWriter, r *http.Request) 
 	if err != nil {
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(err.Code)
-		json.NewEncoder(w).Encode(err)
+		json.NewEncoder(w).Encode(err.AsMessage())
 	} else {
 		w.Header().Add("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(customer)
