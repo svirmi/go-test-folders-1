@@ -21,10 +21,6 @@ type CustomerHandlers struct {
 }
 
 func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Request) {
-	// customers := []Customer{
-	// 	{"Bob", "New Yourk", "192256"},
-	// 	{"Alice", "Denver", "725609"},
-	// }
 
 	customers, _ := ch.service.GetAllCustomers()
 
