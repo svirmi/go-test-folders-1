@@ -68,7 +68,7 @@ func (d CustomerRepositoryDb) ById(id string) (*Customer, *errs.AppError) {
 			return nil, errs.NewNotFoundError("Customer not found")
 		} else {
 			log.Println("Error while scanning customer: " + err.Error())
-			return nil, errs.NewNotFoundError("Unexpected DB error")
+			return nil, errs.NewUnexpectedError("Unexpected DB error")
 		}
 	}
 

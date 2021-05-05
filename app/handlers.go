@@ -50,6 +50,5 @@ func (ch *CustomerHandlers) getCustomer(w http.ResponseWriter, r *http.Request) 
 }
 
 func greet(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusNotFound)
 	fmt.Fprint(w, "Hello World!")
 }

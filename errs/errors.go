@@ -5,8 +5,8 @@ import (
 )
 
 type AppError struct {
-	Code    int
 	Message string
+	Code    int
 }
 
 func NewNotFoundError(message string) *AppError {
