@@ -13,6 +13,6 @@ type Customer struct {
 
 // acts as a port: any component implementing this interface is becoming adapter
 type CustomerRepository interface {
-	FindAll() ([]Customer, error)
+	FindAll() ([]Customer, *errs.AppError)
 	ById(string) (*Customer, *errs.AppError)
 }
