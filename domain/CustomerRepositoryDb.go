@@ -11,20 +11,22 @@ import (
 )
 
 type CustomerRepositoryDb struct {
-	client *sql.DB
+	client *sqlx.DB
 }
 
 func (d CustomerRepositoryDb) FindAll(status string) ([]Customer, *errs.AppError) {
 
-	var rows *sql.Rows
 	var err error
+
+	customers := make([]Customer, 0)
 
 	if status == "" {
 		findAllSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers"
-		rows, err = d.client.Query(findAllSql)
+		err = d.client.Select(&customers, findAllSql)
+
 	} else {
 		findAllSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers where status = ?"
-		rows, err = d.client.Query(findAllSql, status)
+		err = d.client.Select(&customers, findAllSql, status)
 	}
 
 	if err != nil {
@@ -32,20 +34,11 @@ func (d CustomerRepositoryDb) FindAll(status string) ([]Customer, *errs.AppError
 		return nil, errs.NewUnexpectedError("Unexpected DB error")
 	}
 
-	customers := make([]Customer, 0)
-
-	err = sqlx.StructScan(rows, &customers)
-
-	if err != nil {
-		logger.Error("Error while scanning customers " + err.Error())
-		return nil, errs.NewUnexpectedError("Unexpected DB error")
-	}
-
 	return customers, nil
 }
 
 func NewCustomerRepositoryDb() CustomerRepositoryDb {
-	client, err := sql.Open("mysql", "root:secret@tcp(localhost:3306)/banking")
+	client, err := sqlx.Open("mysql", "root:secret@tcp(localhost:3306)/banking")
 	if err != nil {
 		panic(err)
 	}
@@ -57,13 +50,10 @@ func NewCustomerRepositoryDb() CustomerRepositoryDb {
 }
 
 func (d CustomerRepositoryDb) ById(id string) (*Customer, *errs.AppError) {
+	var c Customer
 	customerSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers where customer_id = ?"
 
-	row := d.client.QueryRow(customerSql, id)
-
-	var c Customer
-
-	err := row.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.DateOfBirth, &c.Status)
+	err := d.client.Get(&c, customerSql, id)
 
 	if err != nil {
 
