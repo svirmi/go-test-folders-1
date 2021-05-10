@@ -18,7 +18,7 @@ func init() {
 
 	config.EncoderConfig = encoderConfig
 
-	log, err = config.Build()
+	log, err = config.Build(zap.AddCallerSkip(1))
 
 	if err != nil {
 		panic(err)
@@ -27,4 +27,12 @@ func init() {
 
 func Info(message string, fields ...zap.Field) {
 	log.Info(message, fields...)
+}
+
+func Debug(message string, fields ...zap.Field) {
+	log.Debug(message, fields...)
+}
+
+func Error(message string, fields ...zap.Field) {
+	log.Error(message, fields...)
 }
