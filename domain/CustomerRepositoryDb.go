@@ -7,6 +7,7 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
 )
 
 type CustomerRepositoryDb struct {
@@ -33,16 +34,11 @@ func (d CustomerRepositoryDb) FindAll(status string) ([]Customer, *errs.AppError
 
 	customers := make([]Customer, 0)
 
-	for rows.Next() {
-		var c Customer
-		err := rows.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.DateOfBirth, &c.Status)
+	err = sqlx.StructScan(rows, &customers)
 
-		if err != nil {
-			logger.Error("Error while scanning customers " + err.Error())
-			return nil, errs.NewUnexpectedError("Unexpected DB error")
-		}
-
-		customers = append(customers, c)
+	if err != nil {
+		logger.Error("Error while scanning customers " + err.Error())
+		return nil, errs.NewUnexpectedError("Unexpected DB error")
 	}
 
 	return customers, nil
