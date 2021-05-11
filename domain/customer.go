@@ -14,13 +14,17 @@ type Customer struct {
 	Status      string
 }
 
-func (c Customer) ToDto() dto.CustomerResponse {
-
+func (c Customer) statusAsText() string {
 	statusAsText := "active"
 
 	if c.Status == "0" {
 		statusAsText = "inactive"
 	}
+
+	return statusAsText
+}
+
+func (c Customer) ToDto() dto.CustomerResponse {
 
 	return dto.CustomerResponse{
 		Id:          c.Id,
@@ -28,7 +32,7 @@ func (c Customer) ToDto() dto.CustomerResponse {
 		City:        c.City,
 		Zipcode:     c.Zipcode,
 		DateOfBirth: c.DateOfBirth,
-		Status:      statusAsText,
+		Status:      c.statusAsText(),
 	}
 }
 
