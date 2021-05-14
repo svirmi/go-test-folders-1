@@ -8,7 +8,7 @@ import (
 )
 
 type AccountService interface {
-	NewAccount(dto.NewAccountRequest) (*dto.NewAccountResponse, errs.AppError)
+	NewAccount(request dto.NewAccountRequest) (*dto.NewAccountResponse, *errs.AppError)
 }
 
 type DefaultAccountService struct {

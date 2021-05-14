@@ -17,15 +17,18 @@ func Start() {
 
 	dbClient := getDbClient()
 	customerRepositoryDb := domain.NewCustomerRepositoryDb(dbClient)
-	// accountRepositoryDb := domain.NewAccountRepositoryDb(dbClient)
+	accountRepositoryDb := domain.NewAccountRepositoryDb(dbClient)
 
 	// wire app with services and dependencies
 	// ch := CustomerHandlers{service.NewCustomerService(domain.NewCustomerRepositoryStub())}
 	ch := CustomerHandlers{service.NewCustomerService(customerRepositoryDb)} // DB adapter injected
 
+	ah := AccountHandler{service.NewAccountService(accountRepositoryDb)} // account handler
+
 	router.HandleFunc("/customers", ch.getAllCustomers).Methods(http.MethodGet)
 
 	router.HandleFunc("/customers/{customer_id:[0-9]+}", ch.getCustomer).Methods(http.MethodGet)
+	router.HandleFunc("/customers/{customer_id:[0-9]+}/account", ah.NewAccount).Methods(http.MethodPost)
 
 	router.HandleFunc("/greet", greet).Methods(http.MethodGet)
 
