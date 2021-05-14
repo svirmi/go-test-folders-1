@@ -1,6 +1,9 @@
 package domain
 
-import "folders-one/errs"
+import (
+	"folders-one/dto"
+	"folders-one/errs"
+)
 
 type Account struct {
 	AccountId   string
@@ -13,4 +16,8 @@ type Account struct {
 
 type AccountRepository interface {
 	Save(Account) (*Account, *errs.AppError)
+}
+
+func (a Account) ToNewAccountResponseDto() dto.NewAccountResponse {
+	return dto.NewAccountResponse{a.AccountId}
 }
